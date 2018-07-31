@@ -4,6 +4,8 @@
    Gitrepository - https://github.com/CompEng0001/HooverBoat
 
    Notes - This sketch is for use with Year 0's project 3. The sketch has been written to take instructions from the serial specifically when used with btle HC-05.
+         - Sections of this sketch should not be changed.
+         - Void Setup, voide serialListener
          -
 */
 #include <Servo.h> //  DON'T NOT CHANGE THIS LIBRARY IS ESSIENTIAL
@@ -20,7 +22,9 @@ String center = "c";
 // define type for leds to be used with accelerometer CAN BE CHANGED TO MATCH YOUR INPUTS/OUTPUTS
 int xLevelLeftLed = 10;
 int xLevelRightLed = 11;
-int zLevelIndicatorLed = 9;
+int zLevelIndicatorLed = 9; #
+
+double x y z;
 
 void setup()
 {
@@ -56,8 +60,8 @@ void serialListener()
 }
 
 /* The moveCommand function
-   You are encouraged to change this by adding more functionality and fine tuning, try different angles.
-   When the function is called the first if statement the serialCommand length has to be greater than zero which means it has at least one char
+   You are encouraged to change this by adding more functionality and fine tuning, for instance try different angles.
+   When the function is called the first if statement checks the serialCommand length which must be greater than zero
    The imbedded *if* statements check for the content of the string, left, right or centre then initiates a change in position.
 */
 void moveCommand()
@@ -131,9 +135,9 @@ void accelerometer()
     atan2 outputs the value of -π to π (radians)
     We are then converting the radians to degrees
   */
-  double x = RAD_TO_DEG * (atan2(-yAng, -zAng) + PI);
-  double y = RAD_TO_DEG * (atan2(-xAng, -zAng) + PI);
-  double z = RAD_TO_DEG * (atan2(-yAng, -xAng) + PI);
+  x = RAD_TO_DEG * (atan2(-yAng, -zAng) + PI);
+  y = RAD_TO_DEG * (atan2(-xAng, -zAng) + PI);
+  z = RAD_TO_DEG * (atan2(-yAng, -xAng) + PI);
 
 
   /* Output the caculations, you can comment out these lines after debugging
@@ -146,28 +150,35 @@ void accelerometer()
   Serial.print(" | z: ");
   Serial.println(z);
 
-  /* CAN BE REMOVED AFTER DEBUGGING
-     just here to slow down the serial output - Easier to read
-  */
-  delay(200);
+  delay(200) // slows downt the serial print for ease of viewing
+}
 
+void equilibrium()
+{
   /* The space below is for you to try and use the led indicators to display if you are level
      use x, y, z and implement a switch or if statement to set the digitalWrite( var, HIGH/LOW )
   */
-  if () // x >= #
+  if (x >= 400 && x <= 450) // x >= #
   {
-  // digitalWrite(ledRed, HIGH);
-
+    digitalWrite(ledxGreen, HIGH);
+    digitalWrite(ledxRed, LOW;
   }
-  else if ()
+  else if (x < 400  || x > 450)
   {
-
-  }
-  else if ()
-  {
-
+    digitalWrite(ledxRed, HIGH);
+    digitalWrite(ledxGreen, LOW);
   }
 
+  if (z >= 400 && z <= 450)
+  {
+    digitalWrite(ledzGreen, HIGH);
+    digitalWrite(ledzRed, LOW);
+  }
+  else if (z < 400 || z > 450)
+  {
+    digitalWrite(ledzRed, HIGH);
+    digitalWrite(ledzGreen, LOW);
+  }
 }
 
 void loop()
@@ -175,7 +186,8 @@ void loop()
   /* CODE RUNS FOREVER
      Calls functions sequentially
   */
-  //accelerometer(); // clear this comment if you wish to use the accelerometer
+  accelerometer(); // clear this comment if you wish to use the accelerometer
+  equilibrium();
   serialListener(); // calls the serialListener function to pass incoming data to be used in moveCommand
   moveCommand(); // calls moveCommand and processes the data from serialListener to control the servo(s)
   serialCommand = ""; //  clears string ready for next input
