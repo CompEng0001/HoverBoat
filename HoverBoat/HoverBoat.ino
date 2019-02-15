@@ -1,7 +1,7 @@
 /* Created by : Richard Blair
    Creation Date: 25/06/2018
    Version Number: 1.02
-   Gitrepository - https://github.com/CompEng0001/HooverBoat
+   Gitrepository - https://github.com/CompEng0001/HoverBoat
 
    Notes - This sketch is for use with Year 0's project 3. The sketch has been written to take instructions from the serial specifically when used with btle HC-05.
          - Sections of this sketch should not be changed.
