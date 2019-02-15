@@ -111,7 +111,7 @@ void accelerometer()
 
   /* YOU MAY NEED TO CHANGE THESE VALUES
      The minimum and maximum values that came from
-     the accelerometer while standing still
+     the accelerometer while standing still in my case
   */
   int minVal = 265;
   int maxVal = 402;
@@ -140,7 +140,7 @@ void accelerometer()
   z = RAD_TO_DEG * (atan2(-yAng, -xAng) + PI);
 
 
-  /* Output the caculations, you can comment out these lines after debugging
+  /* Output the caculations, you can comment out these lines after DEBUGGING
      HINT: highlight -> right click -> select comment/uncomment
   */
   Serial.print("x: ");
@@ -150,15 +150,16 @@ void accelerometer()
   Serial.print(" | z: ");
   Serial.println(z);
 
-  delay(200) // slows downt the serial print for ease of viewing
+  delay(200) // slows down the serial print for ease of viewing 
 }
 
 void equilibrium()
 {
   /* The space below is for you to try and use the led indicators to display if you are level
      use x, y, z and implement a switch or if statement to set the digitalWrite( var, HIGH/LOW )
+     Calibrate your values 
   */
-  if (x >= 400 && x <= 450) // x >= #
+  if (x >= 400 && x <= 450) 
   {
     digitalWrite(ledxGreen, HIGH);
     digitalWrite(ledxRed, LOW;
@@ -187,7 +188,7 @@ void loop()
      Calls functions sequentially
   */
   accelerometer(); // clear this comment if you wish to use the accelerometer
-  equilibrium();
+  equilibrium(); // visual indication if level
   serialListener(); // calls the serialListener function to pass incoming data to be used in moveCommand
   moveCommand(); // calls moveCommand and processes the data from serialListener to control the servo(s)
   serialCommand = ""; //  clears string ready for next input
