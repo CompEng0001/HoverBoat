@@ -1,12 +1,11 @@
 /* Created by : Richard Blair
    Creation Date: 25/06/2018
-   Version Number: 1.02
+   Version Number: 1.5
    Gitrepository - https://github.com/CompEng0001/HoverBoat
 
-   Notes - This sketch is for use with Year 0's project 3. The sketch has been written to take instructions from the serial specifically when used with btle HC-05.
-         - Sections of this sketch should not be changed.
-         - Void Setup, voide serialListener
-         -
+   Notes - This sketch is for use with Year 0's project 3. The sketch has been written to take instructions from the serial specifically when used with HC-05.
+         - Void Setup, void serialListener
+        
 */
 #include <Servo.h> //  DON'T NOT CHANGE THIS LIBRARY IS ESSIENTIAL
 
@@ -38,10 +37,24 @@ void setup()
   pinMode(zLevelIndicatorLed, OUTPUT);
 }
 
+/* CODE RUNS FOREVER
+   Calls functions sequentially
+*/
+void loop()
+{
+ 
+  accelerometer(); // clear this comment if you wish to use the accelerometer
+  equilibrium(); // visual indication if level
+  serialListener(); // calls the serialListener function to pass incoming data to be used in moveCommand
+  moveCommand(); // calls moveCommand and processes the data from serialListener to control the servo(s)
+  serialCommand = ""; //  clears string ready for next input
+}
+
 /* The SerialListener function
    DON'T CHANGE THE FUNCTION
-   Uses a while loop with the condition Serial.available() this will remain true forever as the setup calls Serial.begin.
-   Could this work for voice??
+   Uses a while loop with the condition Serial.available() is true when something is in the buffer.
+   Buffer can take 64 Bytes.
+   Could this work for Speech?
 */
 void serialListener()
 {
@@ -131,7 +144,7 @@ void accelerometer()
   int zAng = map(zRead, minVal, maxVal, -90, 90);
 
   /* DON'T CHANGE
-    Caculates 360deg values like so: atan2(-yAng, -zAng)
+    Caculates 360deg values like: atan2(-yAng, -zAng)
     atan2 outputs the value of -π to π (radians)
     We are then converting the radians to degrees
   */
@@ -182,14 +195,3 @@ void equilibrium()
   }
 }
 
-void loop()
-{
-  /* CODE RUNS FOREVER
-     Calls functions sequentially
-  */
-  accelerometer(); // clear this comment if you wish to use the accelerometer
-  equilibrium(); // visual indication if level
-  serialListener(); // calls the serialListener function to pass incoming data to be used in moveCommand
-  moveCommand(); // calls moveCommand and processes the data from serialListener to control the servo(s)
-  serialCommand = ""; //  clears string ready for next input
-}
