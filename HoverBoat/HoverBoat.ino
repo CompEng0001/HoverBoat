@@ -13,9 +13,9 @@ int pos;    // variable to store the servo position - NOTE - this can only be 0 
 String serialCommand; // variable to hold incoming string
 
 // Here you can change your EXPECTED serial input string or add more
-String left = "l";
-String right = "r";
-String center = "c";
+String left = "L";
+String right = "R";
+String center = "C";
 
 // variables for accelerometer
 int xRead, yRead, zRead;
@@ -26,13 +26,13 @@ int ledxGreen = 10, ledxRed = 11;
 void setup()
 {
   Serial.begin(9600); // open serial port and declare the Baud Rate
-  myservo.attach(9); // give servo power
+  myservo.attach(9); // Note that in Arduino 0016 and earlier, the Servo library supports only servos on only two pins: 9 and 10
   Serial.println(myservo.read()); // for debugging to see intial postition of servo should be between 88-93
 
   // for accelerometer level indicators
   pinMode(ledxGreen, OUTPUT);
   pinMode(ledxRed, OUTPUT);
-  pinMode(zLevelIndicatorLed, OUTPUT);
+
 }
 
 /* CODE RUNS FOREVER
@@ -41,8 +41,8 @@ void setup()
 void loop()
 {
 
-  //accelerometer(); // clear this comment if you wish to use the accelerometer
-  //equilibrium(); // visual indication if level
+  accelerometer(); // clear this comment if you wish to use the accelerometer
+  equilibrium(); // visual indication if level
   serialListener(); // calls the serialListener function to pass incoming data to be used in moveCommand
   moveCommand(); // calls moveCommand and processes the data from serialListener to control the servo(s)
   serialCommand = ""; //  clears string ready for next input
@@ -79,10 +79,12 @@ void moveCommand()
 {
   if (serialCommand.length() > 0)
   {
+    Serial.println("Greater than 0");
     //Serial.println(pos);
-    if (serialCommand == left) // turn servo left
+    if (serialCommand.indexOf(left)) // turn servo left
     {
       pos = myservo.read();
+      Serial.println(myservo.read());
       if (pos != 0) // servos can't go lower 0 degrees
       {
         pos -= 20;
@@ -90,7 +92,7 @@ void moveCommand()
         Serial.println(pos); //for debugging
       }
     }
-    else if (serialCommand == right) // turn servo right
+    else if (serialCommand.indexOf(right)) // turn servo right
     {
       pos = myservo.read();
       if (pos != 180) // servos can't go greater than 180  degrees
@@ -100,7 +102,7 @@ void moveCommand()
         Serial.println(pos); //for debugging
       }
     }
-    else if (serialCommand == center) // centres the servo
+    else if (serialCommand.indexOf(center)) // centres the servo
     {
       pos = 90;
       myservo.write(pos); // sets the servos position
@@ -149,7 +151,7 @@ void accelerometer()
 
   /* Output the caculations, you can comment out these lines after DEBUGGING
      HINT: highlight -> right click -> select comment/uncomment
-  */
+ 
   Serial.print("x: ");
   Serial.print(xRead);
   Serial.print(" | y: ");
@@ -158,6 +160,7 @@ void accelerometer()
   Serial.println(zRead);
 
   delay(200); // slows down the serial print for ease of viewing
+   */
 }
 
 void equilibrium()
