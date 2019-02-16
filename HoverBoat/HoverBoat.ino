@@ -1,11 +1,10 @@
 /* Created by : Richard Blair
    Creation Date: 25/06/2018
+   Latest Modified Date: 16/02/2019
    Version Number: 1.5
    Gitrepository - https://github.com/CompEng0001/HoverBoat
 
    Notes - This sketch is for use with Year 0's project 3. The sketch has been written to take instructions from the serial specifically when used with HC-05.
-         - Void Setup, void serialListener
-        
 */
 #include <Servo.h> //  DON'T NOT CHANGE THIS LIBRARY IS ESSIENTIAL
 
@@ -18,12 +17,11 @@ String left = "l";
 String right = "r";
 String center = "c";
 
-// define type for leds to be used with accelerometer CAN BE CHANGED TO MATCH YOUR INPUTS/OUTPUTS
-int ledxGreen = 10;
-int ledxRed = 11;
-int zLevelIndicatorLed = 9; //what colour for this///
+// variables for accelerometer
+int xRead, yRead, zRead;
 
-double x, y, z;
+// define type for leds to be used with accelerometer CAN BE CHANGED TO MATCH YOUR INPUTS/OUTPUTS
+int ledxGreen = 10, ledxRed = 11;
 
 void setup()
 {
@@ -42,9 +40,9 @@ void setup()
 */
 void loop()
 {
- 
-  accelerometer(); // clear this comment if you wish to use the accelerometer
-  equilibrium(); // visual indication if level
+
+  //accelerometer(); // clear this comment if you wish to use the accelerometer
+  //equilibrium(); // visual indication if level
   serialListener(); // calls the serialListener function to pass incoming data to be used in moveCommand
   moveCommand(); // calls moveCommand and processes the data from serialListener to control the servo(s)
   serialCommand = ""; //  clears string ready for next input
@@ -115,45 +113,39 @@ void moveCommand()
 */
 void accelerometer()
 {
-  /* CAN BE CHANGED
-     Analog read pins
-  */
-  const int xPin = 0;
-  const int yPin = 1;
-  const int zPin = 2;
-
- 
-
-
-/*
-  // YOU MAY NEED TO CHANGE THESE VALUES
-  //The minimum and maximum values that came from
-  // the accelerometer while standing still in my case
-
-  int minVal = 265;
-  int maxVal = 402;
-
-  //DON'T CHANGE
+  //CAN CHANGE THE PINS
   //Reads the analog values from the accelerometer
-  int xRead = analogRead(xPin);
-  int yRead = analogRead(yPin);
-  int zRead = analogRead(zPin);
-  
-  //DON'T CHANGE
-  //Convert read values to degrees -90 t'o 90 - Needed for atan2
-  
-  int xAng = map(xRead, minVal, maxVal, -90, 90);
-  int yAng = map(yRead, minVal, maxVal, -90, 90);
-  int zAng = map(zRead, minVal, maxVal, -90, 90);
+  xRead = analogRead(A0);
+  yRead = analogRead(A1);
+  zRead = analogRead(A2);
 
-   //DON'T CHANGE
-   //Caculates 360deg values like: atan2(-yAng, -zAng)
-   //atan2 outputs the value of -π to π (radians)
-   //We are then converting the radians to degrees
-  x = RAD_TO_DEG * (atan2(-yAng, -zAng) + PI);
-  y = RAD_TO_DEG * (atan2(-xAng, -zAng) + PI);
-  z = RAD_TO_DEG * (atan2(-yAng, -xAng) + PI);
-*/
+  /*IF YOU ARE UP FOR CHALLENGE CAN YOU USE THE CODE BELOW
+    the code below is converts the ADC values to angle in degrees,
+    you'll then need to setup equilibrium function to be more/less receptive
+    to the values.
+  */
+  /*
+    //The minimum and maximum values that came from
+    //the accelerometer while standing still in my case
+    //YOU MAY NEED TO CHANGE THESE VALUES
+    int minVal = 265;
+    int maxVal = 402;
+
+    //DON'T CHANGE
+    //Convert read values to degrees -90 t'o 90 - Needed for atan2
+    int xAng = map(xRead, minVal, maxVal, -90, 90);
+    int yAng = map(yRead, minVal, maxVal, -90, 90);
+    int zAng = map(zRead, minVal, maxVal, -90, 90);
+
+    //DON'T CHANGE
+    //Caculates 360deg values like: atan2(-yAng, -zAng)
+    //atan2 outputs the value of -π to π (radians)
+    //We are then converting the radians to degrees
+    float rad2Deg = 57.3249;
+    xRead = rad2Deg * (atan2(-yAng, -zAng) + PI);
+    yRead = rad2Deg * (atan2(-xAng, -zAng) + PI);
+    zRead = rad2Deg * (atan2(-yAng, -xAng) + PI);
+  */
 
   /* Output the caculations, you can comment out these lines after DEBUGGING
      HINT: highlight -> right click -> select comment/uncomment
@@ -165,35 +157,26 @@ void accelerometer()
   Serial.print(" | z: ");
   Serial.println(zRead);
 
-  delay(200); // slows down the serial print for ease of viewing 
+  delay(200); // slows down the serial print for ease of viewing
 }
 
 void equilibrium()
 {
   /* The space below is for you to try and use the led indicators to display if you are level
-     use x, y, z and implement a switch or if statement to set the digitalWrite( var, HIGH/LOW )
-     Calibrate your values 
+     use xRead, yRead and xRead and implement a switch or if statement to set the digitalWrite( var, HIGH/LOW )
+     xRead is done as example, don't forget to calibrate your values
   */
-  if (x >= 1.90 && x <= 2.80) 
+
+  //XPLANE
+  if (xRead >= 340 && xRead <= 360)
   {
     digitalWrite(ledxGreen, HIGH);
     digitalWrite(ledxRed, LOW);
   }
-  else if (x < 1.90  || x > 2.80)
+  else if (xRead < 340  || xRead > 360)
   {
     digitalWrite(ledxRed, HIGH);
     digitalWrite(ledxGreen, LOW);
-  }
-
-  if (z >= 400 && z <= 450)
-  {
-    //digitalWrite(ledzGreen, HIGH);
-    //digitalWrite(ledzRed, LOW);
-  }
-  else if (z < 400 || z > 450)
-  {
-    //digitalWrite(ledzRed, HIGH);
-    //digitalWrite(ledzGreen, LOW);
   }
 }
 
