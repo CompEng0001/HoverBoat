@@ -19,11 +19,11 @@ String right = "r";
 String center = "c";
 
 // define type for leds to be used with accelerometer CAN BE CHANGED TO MATCH YOUR INPUTS/OUTPUTS
-int xLevelLeftLed = 10;
-int xLevelRightLed = 11;
-int zLevelIndicatorLed = 9; #
+int ledxGreen = 10;
+int ledxRed = 11;
+int zLevelIndicatorLed = 9; //what colour for this///
 
-double x y z;
+double x, y, z;
 
 void setup()
 {
@@ -32,8 +32,8 @@ void setup()
   Serial.println(myservo.read()); // for debugging to see intial postition of servo should be between 88-93
 
   // for accelerometer level indicators
-  pinMode(xLevelLeftLed, OUTPUT);
-  pinMode(xLevelRightLed, OUTPUT);
+  pinMode(ledxGreen, OUTPUT);
+  pinMode(ledxRed, OUTPUT);
   pinMode(zLevelIndicatorLed, OUTPUT);
 }
 
@@ -122,48 +122,50 @@ void accelerometer()
   const int yPin = 1;
   const int zPin = 2;
 
-  /* YOU MAY NEED TO CHANGE THESE VALUES
-     The minimum and maximum values that came from
-     the accelerometer while standing still in my case
-  */
+ 
+
+
+/*
+  // YOU MAY NEED TO CHANGE THESE VALUES
+  //The minimum and maximum values that came from
+  // the accelerometer while standing still in my case
+
   int minVal = 265;
   int maxVal = 402;
 
-  /* DON'T CHANGE
-     Reads the analog values from the accelerometer
-  */
+  //DON'T CHANGE
+  //Reads the analog values from the accelerometer
   int xRead = analogRead(xPin);
   int yRead = analogRead(yPin);
   int zRead = analogRead(zPin);
-
-  /*DON'T CHANGE
-    Convert read values to degrees -90 t'o 90 - Needed for atan2
-  */
+  
+  //DON'T CHANGE
+  //Convert read values to degrees -90 t'o 90 - Needed for atan2
+  
   int xAng = map(xRead, minVal, maxVal, -90, 90);
   int yAng = map(yRead, minVal, maxVal, -90, 90);
   int zAng = map(zRead, minVal, maxVal, -90, 90);
 
-  /* DON'T CHANGE
-    Caculates 360deg values like: atan2(-yAng, -zAng)
-    atan2 outputs the value of -π to π (radians)
-    We are then converting the radians to degrees
-  */
+   //DON'T CHANGE
+   //Caculates 360deg values like: atan2(-yAng, -zAng)
+   //atan2 outputs the value of -π to π (radians)
+   //We are then converting the radians to degrees
   x = RAD_TO_DEG * (atan2(-yAng, -zAng) + PI);
   y = RAD_TO_DEG * (atan2(-xAng, -zAng) + PI);
   z = RAD_TO_DEG * (atan2(-yAng, -xAng) + PI);
-
+*/
 
   /* Output the caculations, you can comment out these lines after DEBUGGING
      HINT: highlight -> right click -> select comment/uncomment
   */
   Serial.print("x: ");
-  Serial.print(x);
+  Serial.print(xRead);
   Serial.print(" | y: ");
-  Serial.print(y);
+  Serial.print(yRead);
   Serial.print(" | z: ");
-  Serial.println(z);
+  Serial.println(zRead);
 
-  delay(200) // slows down the serial print for ease of viewing 
+  delay(200); // slows down the serial print for ease of viewing 
 }
 
 void equilibrium()
@@ -172,12 +174,12 @@ void equilibrium()
      use x, y, z and implement a switch or if statement to set the digitalWrite( var, HIGH/LOW )
      Calibrate your values 
   */
-  if (x >= 400 && x <= 450) 
+  if (x >= 1.90 && x <= 2.80) 
   {
     digitalWrite(ledxGreen, HIGH);
-    digitalWrite(ledxRed, LOW;
+    digitalWrite(ledxRed, LOW);
   }
-  else if (x < 400  || x > 450)
+  else if (x < 1.90  || x > 2.80)
   {
     digitalWrite(ledxRed, HIGH);
     digitalWrite(ledxGreen, LOW);
@@ -185,13 +187,13 @@ void equilibrium()
 
   if (z >= 400 && z <= 450)
   {
-    digitalWrite(ledzGreen, HIGH);
-    digitalWrite(ledzRed, LOW);
+    //digitalWrite(ledzGreen, HIGH);
+    //digitalWrite(ledzRed, LOW);
   }
   else if (z < 400 || z > 450)
   {
-    digitalWrite(ledzRed, HIGH);
-    digitalWrite(ledzGreen, LOW);
+    //digitalWrite(ledzRed, HIGH);
+    //digitalWrite(ledzGreen, LOW);
   }
 }
 
