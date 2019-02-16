@@ -15,10 +15,10 @@
   Creation Date: 25/06/2018
   Latest Modified Date: 16/02/2019
   Version Number: 1.5
-  Licence: Apache 2.0
+  License: Apache 2.0
   Gitrepository - https://github.com/CompEng0001/HoverBoat
   -----------------------------------------------------------------------
-   Notes - This sketch is for use with Year 0's project 3. The sketch has been written to take instructions from the serial specifically when used with HC-05.
+  Notes - This sketch is for use with Year 0's project 3. The sketch has been written to take instructions from the serial specifically when used with HC-05.
 */
 #include <Servo.h> //  DON'T NOT CHANGE THIS LIBRARY IS ESSIENTIAL
 
@@ -35,7 +35,7 @@ String center = "C";
 int xRead, yRead, zRead;
 
 // define type for leds to be used with accelerometer CAN BE CHANGED TO MATCH YOUR INPUTS/OUTPUTS
-int ledxGreen = 10, ledxRed = 11;
+int ledXGreen = 10, ledXRed = 11;
 
 void setup()
 {
@@ -44,8 +44,8 @@ void setup()
   Serial.println(myservo.read()); // for debugging to see intial postition of servo should be between 88-93
 
   // for accelerometer level indicators
-  pinMode(ledxGreen, OUTPUT);
-  pinMode(ledxRed, OUTPUT);
+  pinMode(ledXGreen, OUTPUT);
+  pinMode(ledXRed, OUTPUT);
 
 }
 
@@ -91,14 +91,13 @@ void serialListener()
 */
 void moveCommand()
 {
+  pos = myservo.read(); 
   if (serialCommand.length() > 0)
   {
     Serial.println("Greater than 0");
     //Serial.println(pos);
     if (serialCommand.indexOf(left)) // turn servo left
     {
-      pos = myservo.read();
-      Serial.println(myservo.read());
       if (pos != 0) // servos can't go lower 0 degrees
       {
         pos -= 20;
@@ -108,7 +107,6 @@ void moveCommand()
     }
     else if (serialCommand.indexOf(right)) // turn servo right
     {
-      pos = myservo.read();
       if (pos != 180) // servos can't go greater than 180  degrees
       {
         pos += 20;
@@ -163,10 +161,10 @@ void accelerometer()
     zRead = rad2Deg * (atan2(-yAng, -xAng) + PI);
   */
 
-  /* Output the caculations, you can comment out these lines after DEBUGGING
-     HINT: highlight -> right click -> select comment/uncomment
+ /* //Output the caculations, you can comment out these lines after DEBUGGING
  
   Serial.print("x: ");
+
   Serial.print(xRead);
   Serial.print(" | y: ");
   Serial.print(yRead);
@@ -174,26 +172,27 @@ void accelerometer()
   Serial.println(zRead);
 
   delay(200); // slows down the serial print for ease of viewing
-   */
+ */ 
 }
 
 void equilibrium()
 {
   /* The space below is for you to try and use the led indicators to display if you are level
-     use xRead, yRead and xRead and implement a switch or if statement to set the digitalWrite( var, HIGH/LOW )
+     use xRead, yRead and zRead and implement a switch or if statement to set the digitalWrite( var, HIGH/LOW )
      xRead is done as example, don't forget to calibrate your values
   */
 
   //XPLANE
   if (xRead >= 340 && xRead <= 360)
   {
-    digitalWrite(ledxGreen, HIGH);
-    digitalWrite(ledxRed, LOW);
+    digitalWrite(ledXGreen, HIGH);
+    digitalWrite(ledXRed, LOW);
   }
   else if (xRead < 340  || xRead > 360)
   {
-    digitalWrite(ledxRed, HIGH);
-    digitalWrite(ledxGreen, LOW);
+    digitalWrite(ledXRed, HIGH);
+    digitalWrite(ledXGreen, LOW);
   }
+  //YPLANE
+  //ZPLANE 
 }
-
