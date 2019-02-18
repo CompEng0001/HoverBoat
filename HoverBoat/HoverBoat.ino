@@ -23,7 +23,7 @@
 #include <Servo.h> //  DON'T NOT CHANGE THIS LIBRARY IS ESSIENTIAL
 
 Servo myservo;  // create servo object to control a servo
-int pos;    // variable to store the servo position - NOTE - this can only be 0 to 180.
+int pos;       // variable to store the servo position - NOTE - this can only be 0 to 180.
 String serialCommand; // variable to hold incoming string
 
 // Here you can change your EXPECTED serial input string or add more
